@@ -1,0 +1,9 @@
+/.vs/
+/lib/
+/obj/
+/Properties/
+
+/bin/*
+/bin/Debug/*
+!/bin/Debug/
+!/bin/Debug/XtgMultiplayer.dll
