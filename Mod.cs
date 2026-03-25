@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using HarmonyLib;
+﻿using HarmonyLib;
 using MelonLoader;
 
 [assembly: MelonInfo(typeof(XtgMultiplayer.Mod), "Exit the Gungeon Multiplayer Mod", "0.0.1", "Amitai")]

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HarmonyLib;
 using UnityEngine;
 
@@ -23,6 +20,7 @@ namespace XtgMultiplayer
         {
             character.gameObject.SetActive(false);
             lastDeadPlayer = character;
+            FallRecovery.EndRecovery(character);
             AkSoundEngine.PostEvent("Play_UI_gameover_start_01", character.gameObject);
             if (Helper.GetAllLivingPlayers().Count == 0)
             {
