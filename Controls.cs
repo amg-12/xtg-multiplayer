@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace XtgMultiplayer
 {
-    public static class Controls
+    static class Controls
     {
         static Player player1 = ReInput.players.GetPlayer(0);
         static Player player2 = ReInput.players.GetSystemPlayer();
@@ -36,6 +36,16 @@ namespace XtgMultiplayer
             if (player2.controllers.joystickCount < player1.controllers.joystickCount)
             {
                 player2.controllers.AddController(args.controllerType, args.controllerId, true);
+            }
+        }
+
+        [HarmonyPatch(typeof(MobilePreIntroController), "Start")]
+        static class Initialise
+        {
+            public static bool Prefix()
+            {
+                InitialiseRewired();
+                return true;
             }
         }
     }

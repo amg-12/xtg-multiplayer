@@ -59,10 +59,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Death.cs" />
+    <Compile Include="FallRecovery.cs" />
+    <Compile Include="Music.cs" />
     <Compile Include="Controls.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="XtgMultiplayer.cs" />
+    <Compile Include="Mod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

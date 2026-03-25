@@ -3,9 +3,19 @@ using MelonLoader;
 
 namespace XtgMultiplayer
 {
-    internal class Debug
+    static class Debug
     {
-        [HarmonyPatch(typeof(PlayerController), "OnHPChanged")]
+        [HarmonyPatch(typeof(Character), "SetFlying")]
+        static class DebugFlying
+        {
+            public static bool Prefix(PlayerController __instance, ref bool value, ref string source)
+            {
+                MelonLogger.Msg($"{__instance.name}, {value}, {source}");
+                return true;
+            }
+        }
+
+        // [HarmonyPatch(typeof(PlayerController), "OnHPChanged")]
         static class DebugHP
         {
             public static bool Prefix(PlayerController __instance, ref float lastHP, ref float currentHP)
@@ -15,7 +25,7 @@ namespace XtgMultiplayer
             }
         }
 
-        [HarmonyPatch(typeof(Character), "OnCharacterDead")]
+        // [HarmonyPatch(typeof(Character), "OnCharacterDead")]
         static class DebugCharacterDead
         {
             public static bool Prefix(Character __instance)
@@ -28,7 +38,7 @@ namespace XtgMultiplayer
             }
         }
 
-        [HarmonyPatch(typeof(Character), "Awake")]
+        // [HarmonyPatch(typeof(Character), "Awake")]
         static class DebugCharacterDead2
         {
             public static void Postfix(Character __instance)
