@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls.cs" />
+    <Compile Include="Debug.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="XtgMultiplayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

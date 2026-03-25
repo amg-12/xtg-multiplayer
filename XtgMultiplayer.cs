@@ -8,6 +8,32 @@ namespace XtgMultiplayer
 {
     public class XtgMultiplayer : MelonMod
     {
+        static bool BypassFlushAudio;
+
+        [HarmonyPatch(typeof(PlayerController), "OnHPChanged")]
+        static class SetBypassFlushAudio
+        {
+            public static bool Prefix()
+            {
+                BypassFlushAudio = true;
+                return true;
+            }
+
+            public static void Postfix()
+            {
+                BypassFlushAudio = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(AudioManager), "FlushAudio")]
+        static class FixMusicStoppingOnDeath
+        {
+            public static bool Prefix()
+            {
+                return !BypassFlushAudio || Helper.GetAllPlayers().All(p => p.IsDead);
+            }
+        }
+
         [HarmonyPatch(typeof(GameManager), "Awake")]
         static class SpawnSecondPlayer
         {
@@ -23,10 +49,12 @@ namespace XtgMultiplayer
             {
                 if (IsFirstRun)
                 {
+                    RouteData routeData = CharacterManager.Instance.GetPrimaryPlayerController().RouteData;
                     Character chara = Extensions.Instantiate<Character>(__instance.PlayerPrefabs[6], null);
                     chara.transform.SetXY(0f, -0.49f);
-                    UnityEngine.Object.DontDestroyOnLoad(chara);
                     Controls.AssignSecondPlayer(chara.gameObject);
+                    PlayerController pc = chara.gameObject.GetComponent<PlayerController>();
+                    AccessTools.Field(typeof(PlayerController), "m_cachedRouteData").SetValue(pc, routeData);
                 }
             }
         }
@@ -73,20 +101,26 @@ namespace XtgMultiplayer
            }
         }
 
-        [HarmonyPatch(typeof(Character), "OnCharacterDead")]
+        [HarmonyPatch(typeof(PlayerController), "OnHPChanged")]
         static class HandleDeath
+        {
+            public static bool Prefix(PlayerController __instance)
+            {
+                Character character = __instance.gameObject.GetComponent<Character>();
+                if (character.IsDead)
+                {
+                    Helper.KillPlayer(character);
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(Character), "OnCharacterDead")]
+        static class StopPlayerDeadEvent
         {
             public static bool Prefix(Character __instance)
             {
-                if (__instance.Type == CharacterType.Player)
-                {
-                    Helper.KillPlayer(__instance);
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return __instance.Type != CharacterType.Player;
             }
         }
 

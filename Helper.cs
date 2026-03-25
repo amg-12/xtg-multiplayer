@@ -7,7 +7,7 @@ namespace XtgMultiplayer
 {
     public static class Helper
     {
-        public static Character lastDeadPlayer = null;
+        public static Character lastDeadPlayer;
 
         public static List<Character> GetAllPlayers()
         {
@@ -38,7 +38,8 @@ namespace XtgMultiplayer
         {
             character.gameObject.SetActive(false);
             lastDeadPlayer = character;
-            if (GetAllPlayers().All(c => c.IsDead))
+            AkSoundEngine.PostEvent("Play_UI_gameover_start_01", character.gameObject);
+            if (GetAllLivingPlayers().Count == 0)
             {
                 DestroyAllPlayers();
             }
