@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Death.cs" />
-    <Compile Include="FallRecovery.cs" />
+    <Compile Include="FallRecover.cs" />
     <Compile Include="Music.cs" />
     <Compile Include="Controls.cs" />
     <Compile Include="Debug.cs" />

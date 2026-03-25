@@ -2,7 +2,7 @@
 
 namespace XtgMultiplayer
 {
-    static class FallRecovery
+    static class FallRecover
     {
         public static void EndRecovery(Character character)
         {
@@ -11,6 +11,7 @@ namespace XtgMultiplayer
             character.VelocityY = 0;
             character.SetFlying(false, "FallRecover");
             character.SetIncorporeality(0);
+            character.InvulnerableStack = 0;
         }
 
         [HarmonyPatch(typeof(SpaceTurtle_FallRecover), "Initialize")]
