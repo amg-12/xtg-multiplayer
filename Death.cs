@@ -20,7 +20,7 @@ namespace XtgMultiplayer
         {
             character.gameObject.SetActive(false);
             lastDeadPlayer = character;
-            FallRecovery.EndRecovery(character);
+            FallRecover.EndRecovery(character);
             AkSoundEngine.PostEvent("Play_UI_gameover_start_01", character.gameObject);
             if (Helper.GetAllLivingPlayers().Count == 0)
             {
@@ -32,6 +32,7 @@ namespace XtgMultiplayer
         {
             character.gameObject.SetActive(true);
             lastDeadPlayer = null;
+            FallRecover.EndRecovery(character);
             character.HP = 3;
             if (location != null)
             {
@@ -70,7 +71,7 @@ namespace XtgMultiplayer
         {
             public static bool Prefix(Character __instance)
             {
-                return __instance.Type != CharacterType.Player;
+                return __instance.Type != CharacterType.Player || Helper.GetAllLivingPlayers().Count == 0;
             }
         }
 

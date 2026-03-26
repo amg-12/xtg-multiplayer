@@ -10,24 +10,24 @@ namespace XtgMultiplayer
         [HarmonyPatch(typeof(GameManager), "Awake")]
         static class SpawnSecondPlayer
         {
-            static bool IsFirstRun;
+            static bool isFirstRun;
 
             public static bool Prefix ()
             {
-                IsFirstRun = GameManager.IsFirstRun;
+                isFirstRun = GameManager.IsFirstRun;
                 return true;
             }
 
             public static void Postfix(GameManager __instance)
             {
-                if (IsFirstRun)
+                if (isFirstRun)
                 {
                     Character char1 = CharacterManager.Instance.GetPrimaryPlayer();
                     Character char2 = Extensions.Instantiate<Character>(__instance.PlayerPrefabs[6], null);
                     PlayerController pc1 = CharacterManager.Instance.GetPrimaryPlayerController();
                     PlayerController pc2 = char2.gameObject.GetComponent<PlayerController>();
                     Controls.AssignSecondPlayer(char2.gameObject);
-                    char2.transform.SetXY(char1.transform.position);
+                    char2.transform.SetXY(char1.Center);
                     AccessTools.Field(typeof(PlayerController), "m_cachedRouteData").SetValue(pc2, pc1.RouteData);                    
                 }
             }

@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Camera.cs" />
     <Compile Include="Death.cs" />
     <Compile Include="FallRecover.cs" />
     <Compile Include="Music.cs" />

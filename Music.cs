@@ -4,20 +4,20 @@ namespace XtgMultiplayer
 {
     static class Music
     {
-        static bool BypassFlushAudio;
+        static bool bypassFlushAudio = false;
 
         [HarmonyPatch(typeof(PlayerController), "OnHPChanged")]
         static class SetBypassFlushAudio
         {
             public static bool Prefix()
             {
-                BypassFlushAudio = true;
+                bypassFlushAudio = true;
                 return true;
             }
 
             public static void Postfix()
             {
-                BypassFlushAudio = false;
+                bypassFlushAudio = false;
             }
         }
 
@@ -26,7 +26,7 @@ namespace XtgMultiplayer
         {
             public static bool Prefix()
             {
-                return !BypassFlushAudio || Helper.GetAllLivingPlayers().Count == 0;
+                return !bypassFlushAudio || Helper.GetAllLivingPlayers().Count == 0;
             }
         }
     }
