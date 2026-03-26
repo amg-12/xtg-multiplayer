@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System.Linq;
+using HarmonyLib;
 using Rewired;
 using UnityEngine;
 
@@ -13,7 +14,8 @@ namespace XtgMultiplayer
         {
             player2.controllers.hasKeyboard = false;
             player2.controllers.hasMouse = false;
-            foreach (ControllerMap map in player1.controllers.maps.GetAllMaps())
+            foreach (ControllerMap map in player1.controllers.maps.GetAllMaps()
+                .Where(m => m.controllerType == ControllerType.Joystick))
             {
                 player2.controllers.maps.AddMap(map.controllerType, map.categoryId, map);
             }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
-using MelonLoader;
 using UnityEngine;
 
 namespace XtgMultiplayer
@@ -51,10 +50,8 @@ namespace XtgMultiplayer
         {
             public static void Postfix(Room __instance)
             {
-                MelonLogger.Msg("hiiiii");
                 if (__instance.IsShop)
                 {
-                    MelonLogger.Msg("shap");
                     __instance.AdditionalCameraOffset.Set(0f, 0.25f);
                 }
             }
