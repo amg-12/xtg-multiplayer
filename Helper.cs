@@ -5,10 +5,14 @@ namespace XtgMultiplayer
 {
     public static class Helper
     {
-
         public static List<Character> GetAllPlayers()
         {
             return GameManager.Instance.CharacterManager.GetAliveCharacters(CharacterType.Player);
+        }
+
+        public static List<PlayerController> GetAllPlayerControllers()
+        {
+            return GetAllPlayers().Select(p => p.gameObject.GetComponent<PlayerController>()).ToList();
         }
 
         public static List<Character> GetAllLivingPlayers()

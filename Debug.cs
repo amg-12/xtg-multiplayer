@@ -5,7 +5,7 @@ namespace XtgMultiplayer
 {
     static class Debug
     {
-        [HarmonyPatch(typeof(Character), "SetFlying")]
+        //[HarmonyPatch(typeof(Character), "SetFlying")]
         static class DebugFlying
         {
             public static bool Prefix(PlayerController __instance, ref bool value, ref string source)
