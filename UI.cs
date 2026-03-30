@@ -1,4 +1,7 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using HarmonyLib;
+using TMPro;
 using UnityEngine;
 
 namespace XtgMultiplayer
@@ -8,41 +11,49 @@ namespace XtgMultiplayer
         [HarmonyPatch(typeof(UIManager), "Awake")]
         static class MakeSecondUI
         {
-            public static bool Prefix(UIManager __instance)
+            public static void Postfix(UIManager __instance)
             {
-                UI_PlayerStat[] stats = __instance.PlayerStats;
-                stats = new UI_PlayerStat[]
-                {
-                    stats[0],
-                    Extensions.Instantiate<UI_PlayerStat>(stats[0])
-                };
+                List<UI_PlayerStat> stats = __instance.PlayerStats.ToList();
+                stats.Add(Extensions.Instantiate<UI_PlayerStat>(stats[0]));
                 stats[1].ComboUI = Object.Instantiate<UI_PlayerCombo>(stats[0].ComboUI);
-                __instance.PlayerStats = stats;
-                return true;
+                __instance.PlayerStats = stats.ToArray();
             }
         }
 
-        // magic numbers wooo
-        // probably change the anchors instead
-        public static void Position()
+        [HarmonyPatch(typeof(UI_PlayerStat), "Init")]
+        static class PositionUI
         {
-            UI_PlayerStat[] stats = UIManager.Instance.PlayerStats;
-            if (stats.Length >= 2)
+            public static void Postfix(UI_PlayerStat __instance, ref Character player)
             {
-                stats[1].transform.parent = stats[0].transform.parent;
-                stats[1].GetComponent<RectTransform>().anchoredPosition3D = new Vector2(429, 0);
-                foreach (UI_PlayerStat stat in stats)
+                Position(__instance, player);
+            }
+        }
+
+        static void Position(UI_PlayerStat stat, Character player)
+        {
+            RectTransform rect = stat.GetComponent<RectTransform>();
+            RectTransform combo = stat.ComboUI.GetComponent<RectTransform>();
+            combo.SetParent(rect);
+            combo.anchoredPosition = new Vector2(8, -35);
+            combo.anchorMin = new Vector2(0, 1);
+            combo.anchorMax = new Vector2(0, 1);
+            combo.pivot     = new Vector2(0, 1);
+            RectTransform coins = rect.Find("Coin Text").GetComponent<RectTransform>();
+            coins.anchoredPosition = new Vector2(60, -26);
+            if (player.PlayerIndex == 1)
+            {
+                rect.SetParent(UIManager.Instance.transform);
+                rect.anchoredPosition3D = Vector3.zero;
+                rect.anchorMin = new Vector2(1, 1);
+                rect.localRotation = Quaternion.Euler(0, 180, 0);
+                foreach (Transform text in
+                    rect.GetComponentsInChildren<TextMeshProUGUI>()
+                    .Select(t => t.transform))
                 {
-                    stat.ComboUI.transform.parent = stat.transform;
-                    stat.ComboUI.transform.localPosition = new Vector2(43, -845);
+                    text.localRotation = Quaternion.Euler(0, 180, 0);
+                    text.MoveX(text.name.Contains("Score") ? -0.5f : -1);
                 }
-                stats[0].transform.Find("Coin Text").GetComponent<RectTransform>().anchoredPosition3D = new Vector2(60, -26);
-                stats[1].transform.Find("Panel_HP").GetComponent<RectTransform>().anchoredPosition3D = new Vector2(630, -5);
-                stats[1].transform.Find("Panel_Blanks").GetComponent<RectTransform>().anchoredPosition3D = new Vector2(626, -15);
-                stats[1].transform.Find("Coin Text").gameObject.SetActive(false);
-                stats[1].transform.Find("Panel_HP").localScale = new Vector3(-1, 1, 1);
-                stats[1].transform.Find("Panel_Blanks").localScale = new Vector3(-1, 1, 1);
-                stats[1].transform.Find("Weapon Panel/WeaponUIBG/WeaponSprite").localScale = new Vector3(-1, 1, 1);
+                coins.gameObject.SetActive(false);
             }
         }
     }

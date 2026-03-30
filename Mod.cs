@@ -35,7 +35,6 @@ namespace XtgMultiplayer
                     char2.transform.SetXY(char1.Center);
                     AccessTools.Field(typeof(PlayerController), "m_cachedRouteData").SetValue(pc2, pc1.RouteData);
                 }
-                UI.Position();
             }
         }
 
