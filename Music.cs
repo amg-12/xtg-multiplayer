@@ -1,32 +1,45 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
+using HarmonyLib;
 
 namespace XtgMultiplayer
 {
     static class Music
     {
-        static bool bypassFlushAudio = false;
-
-        [HarmonyPatch(typeof(PlayerController), "OnHPChanged")]
-        static class SetBypassFlushAudio
+        public static void MaybeFlushAudio()
         {
-            public static bool Prefix()
+            if (Helper.GetAllLivingPlayers().Count == 0)
             {
-                bypassFlushAudio = true;
-                return true;
-            }
-
-            public static void Postfix()
-            {
-                bypassFlushAudio = false;
+                AudioManager.FlushAudio();
             }
         }
 
-        [HarmonyPatch(typeof(AudioManager), "FlushAudio")]
-        static class FixMusicStoppingOnDeath
+        static IEnumerable<CodeInstruction> FlushAudioTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            public static bool Prefix()
+            MethodInfo flushAudio = AccessTools.Method(typeof(AudioManager), "FlushAudio");
+            MethodInfo maybeFlush = AccessTools.Method(typeof(Music), "MaybeFlushAudio");
+            return new CodeMatcher(instructions)
+                .MatchForward(false, new CodeMatch(OpCodes.Call, flushAudio))
+                .SetOperandAndAdvance(maybeFlush)
+                .InstructionEnumeration();
+        }
+
+        [HarmonyPatch(typeof(PlayerController), "OnHPChanged")]
+        static class FixAudioStop
+        {
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
-                return !bypassFlushAudio || Helper.GetAllLivingPlayers().Count == 0;
+                return FlushAudioTranspiler(instructions);
+            }
+        }
+
+        [HarmonyPatch(typeof(PlayerController), "OnArmorChanged")]
+        static class FixAudioStopRobot
+        {
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            {
+                return FlushAudioTranspiler(instructions);
             }
         }
     }

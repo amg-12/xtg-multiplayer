@@ -2,6 +2,7 @@
 using System.Linq;
 using HarmonyLib;
 using UnityEngine;
+using static MelonLoader.MelonLogger;
 
 namespace XtgMultiplayer
 {
@@ -33,7 +34,14 @@ namespace XtgMultiplayer
             character.gameObject.SetActive(true);
             lastDeadPlayer = null;
             FallRecover.EndRecovery(character);
-            character.HP = 3;
+            if (character.MaxHP > 0)
+            {
+                character.HP = 3;
+            }
+            else
+            {
+                character.Armor = 6;
+            }
             if (location != null)
             {
                 character.transform.SetXY(location.Value);
@@ -52,17 +60,30 @@ namespace XtgMultiplayer
             }
         }
 
+        static void CheckDead(PlayerController player)
+        {
+            Character character = player.gameObject.GetComponent<Character>();
+            if (character.IsDead)
+            {
+                OnPlayerDead(character);
+            }
+        }
+
         [HarmonyPatch(typeof(PlayerController), "OnHPChanged")]
         static class RegisterPlayerDead
         {
-            public static bool Prefix(PlayerController __instance)
+            public static void Postfix (PlayerController __instance)
             {
-                Character character = __instance.gameObject.GetComponent<Character>();
-                if (character.IsDead)
-                {
-                    OnPlayerDead(character);
-                }
-                return true;
+                CheckDead(__instance);
+            }
+        }
+
+        [HarmonyPatch(typeof(PlayerController), "OnArmorChanged")]
+        static class RegisterRobotDead
+        {
+            public static void Postfix(PlayerController __instance)
+            {
+                CheckDead(__instance);
             }
         }
 
