@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="ElevatorDragun.cs" />
     <Compile Include="ElevatorFlying.cs" />
     <Compile Include="Interacting.cs" />
     <Compile Include="Money.cs" />
@@ -80,4 +81,7 @@
     <Content Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(TargetDir)XtgMultiplayer.dll" "D:\Steam\steamapps\common\Exit the Gungeon\Mods\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

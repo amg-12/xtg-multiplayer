@@ -5,7 +5,20 @@ namespace XtgMultiplayer
 {
     static class Debug
     {
-        //[HarmonyPatch(typeof(Character), "SetFlying")]
+        // [HarmonyPatch(typeof(GameManager), "Awake")]
+        static class SkipToDragun
+        {
+            public static bool Prefix()
+            {
+                if (GameSceneManager.StageCursor < 5)
+                {
+                    GameSceneManager.StageCursor = 6;
+                }
+                return true;
+            }
+        }
+
+        // [HarmonyPatch(typeof(Character), "SetFlying")]
         static class DebugFlying
         {
             public static bool Prefix(PlayerController __instance, ref bool value, ref string source)

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using HarmonyLib;
 using MelonLoader;
 
@@ -32,9 +31,9 @@ namespace XtgMultiplayer
                     PlayerController pc1 = CharacterManager.Instance.GetPrimaryPlayerController();
                     PlayerController pc2 = char2.gameObject.GetComponent<PlayerController>();
                     Controls.AssignSecondPlayer(char2.gameObject);
-                    char2.transform.SetXY(char1.Center);
                     AccessTools.Field(typeof(PlayerController), "m_cachedRouteData").SetValue(pc2, pc1.RouteData);
                 }
+                Helper.PositionPlayers();
             }
         }
 
@@ -66,19 +65,6 @@ namespace XtgMultiplayer
             }
         }
 
-        [HarmonyPatch(typeof(GameManager), "Coroutine_Area")]
-        static class FixNewAreaPause
-        {
-            public static bool Prefix(GameManager __instance)
-            {
-                foreach (Character character in Helper.GetAllPlayers())
-                {
-                    character.IsPaused = false;
-                }
-                return true;
-            }
-        }
-
         [HarmonyPatch(typeof(GameManager), "HandleGameplayStateEndLogic")]
         static class DestroyPlayersAfterRun
         {
@@ -107,11 +93,6 @@ namespace XtgMultiplayer
                     SaveData.Current.LastPlayedCharacter = LastPlayedCharacter;
                 }
             }
-        }
-
-        public override void OnInitializeMelon()
-        {
-            MelonLogger.Msg("hi");
         }
     }
 }

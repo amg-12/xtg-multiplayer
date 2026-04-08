@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace XtgMultiplayer
 {
@@ -25,6 +27,23 @@ namespace XtgMultiplayer
             foreach (Character c in GetAllPlayers())
             {
                 UnityEngine.Object.Destroy(c.gameObject);
+            }
+        }
+
+        public static void PositionPlayers(Nullable<Vector2> pos=null)
+        {
+            List<Character> players = GetAllPlayers();
+            foreach (Character player in players)
+            {
+                player.Show(pos == null
+                    ? Field.Instance.Elevator.SpawnPosition
+                    : pos.Value
+                );
+            }
+            if (GetAllLivingPlayers().Count == 2)
+            {
+                players[0].transform.MoveX(-0.2f);
+                players[1].transform.MoveX(0.2f);
             }
         }
     }
