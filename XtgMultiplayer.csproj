@@ -63,6 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="ElevatorFlying.cs" />
+    <Compile Include="Interacting.cs" />
     <Compile Include="Money.cs" />
     <Compile Include="Death.cs" />
     <Compile Include="FallRecover.cs" />

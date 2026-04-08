@@ -7,7 +7,7 @@ namespace XtgMultiplayer
     {
         public static List<Character> GetAllPlayers()
         {
-            return GameManager.Instance.CharacterManager.GetAliveCharacters(CharacterType.Player);
+            return CharacterManager.Instance.GetAliveCharacters(CharacterType.Player);
         }
 
         public static List<PlayerController> GetAllPlayerControllers()

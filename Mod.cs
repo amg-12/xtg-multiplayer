@@ -16,7 +16,7 @@ namespace XtgMultiplayer
         {
             static bool isFirstRun;
 
-            public static bool Prefix ()
+            public static bool Prefix()
             {
                 isFirstRun = GameManager.IsFirstRun;
                 return true;
@@ -59,8 +59,9 @@ namespace XtgMultiplayer
             {
                 if (character.Type == CharacterType.Player)
                 {
-                    List<Character> players = __instance.AliveCharacters[(int)CharacterType.Player];
-                    players = players.OrderBy(p => p.PlayerIndex).ToList();
+                    __instance.AliveCharacters[(int)CharacterType.Player] =
+                        __instance.AliveCharacters[(int)CharacterType.Player]
+                        .OrderBy(p => p.PlayerIndex).ToList();
                 }
             }
         }
@@ -81,11 +82,11 @@ namespace XtgMultiplayer
         [HarmonyPatch(typeof(GameManager), "HandleGameplayStateEndLogic")]
         static class DestroyPlayersAfterRun
         {
-           public static bool Prefix(GameManager __instance)
-           {
+            public static bool Prefix(GameManager __instance)
+            {
                 Helper.DestroyAllPlayers();
                 return true;
-           }
+            }
         }
 
         [HarmonyPatch(typeof(PlayerController), "Start")]
