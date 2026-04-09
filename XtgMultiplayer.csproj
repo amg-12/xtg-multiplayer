@@ -62,7 +62,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoDodge.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="Doors.cs" />
     <Compile Include="ElevatorDragun.cs" />
     <Compile Include="ElevatorFlying.cs" />
     <Compile Include="Interacting.cs" />
